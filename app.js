@@ -6,7 +6,7 @@
    Google Apps Script Web App URL after setup.
    ============================================================ */
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeNt8zjoEKMzk_i8TAuynDX91qWxNh4kigDrU_lIJ4xkp15_Yd3VaN74nyQpey1jks/exec';
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQW684lRpXI3t2guOqdSdeKjR9kpGhneKfEq324_kOyzlI8Nu991CfNiS1o41bUefXFnUoaYrC-3G_9/pub?gid=0&single=true&output=csv';
 
 const CONDITIONS = [
   'Celiac Disease', 'Diabetes', 'Eating Disorders', 'Heart Health',
@@ -107,27 +107,35 @@ document.addEventListener('DOMContentLoaded', () => {
   loadResources();
 });
 
-/* ── Load resources from Sheets or fall back to seed data ── */
+/* ── Load resources from published CSV ── */
 async function loadResources() {
-  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
-    /* Demo mode: merge seed data with anything submitted via the form */
-    const submitted = JSON.parse(sessionStorage.getItem('fay_resources') || '[]');
-    allResources = [...submitted, ...SEED_DATA];
-    handleNewParam();
-    renderCards();
-    return;
-  }
-
   try {
-    const data = await fetchJSONP(APPS_SCRIPT_URL);
-    console.log('Sheets response:', data);
-    allResources = Array.isArray(data) && data.length ? data : [...SEED_DATA];
+    const res  = await fetch(SHEET_CSV_URL);
+    const text = await res.text();
+    const rows = parseCSV(text);
+    console.log('Sheets CSV response:', rows);
+    allResources = rows.length ? rows : [...SEED_DATA];
   } catch (err) {
-    console.error('Failed to load from Sheets:', err);
+    console.error('Failed to load CSV:', err);
     allResources = [...SEED_DATA];
   }
   handleNewParam();
   renderCards();
+}
+
+/* ── CSV parser ── */
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+  return lines.slice(1).map(line => {
+    const values = line.match(/(".*?"|[^,]+)(?=,|$)/g) || [];
+    const obj = {};
+    headers.forEach((h, i) => {
+      obj[h] = (values[i] || '').trim().replace(/^"|"$/g, '');
+    });
+    return obj;
+  }).filter(r => r.title);
 }
 
 /* ── If redirected from submit form, highlight newest card ── */
