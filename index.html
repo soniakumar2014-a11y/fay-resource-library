@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nutrition Resource Library — Fay</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="14" cy="14" r="14" fill="#6B4EFF" opacity="0.12"/>
+      <path d="M14 6a8 8 0 1 1 0 16A8 8 0 0 1 14 6zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 14 8zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" fill="#6B4EFF"/>
+    </svg>
+    Fay
+  </a>
+  <a href="submit.html" target="_blank" class="btn-primary">
+    + Submit New Resource
+  </a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Nutrition Resource Library</h1>
+  <p>Browse dietitian-contributed guides, meal plans, recipes, and more — organized by condition and format.</p>
+</div>
+
+<!-- FILTERS -->
+<div class="filter-bar">
+  <div class="ms-wrap" id="conditionWrap">
+    <button class="ms-trigger" id="conditionTrigger">
+      <span class="ms-label">Condition</span>
+      <span class="arrow">▼</span>
+    </button>
+    <div class="ms-dropdown" id="conditionDropdown">
+      <div class="ms-search"><input type="text" placeholder="Search conditions…" id="conditionSearch" /></div>
+      <div class="ms-options" id="conditionOptions"></div>
+    </div>
+  </div>
+
+  <div class="ms-wrap" id="typeWrap">
+    <button class="ms-trigger" id="typeTrigger">
+      <span class="ms-label">Resource Type</span>
+      <span class="arrow">▼</span>
+    </button>
+    <div class="ms-dropdown" id="typeDropdown">
+      <div class="ms-search"><input type="text" placeholder="Search types…" id="typeSearch" /></div>
+      <div class="ms-options" id="typeOptions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHICLETS -->
+<div class="chiclets" id="chiclets"></div>
+
+<!-- CARD GRID -->
+<div class="grid" id="grid">
+  <div class="empty-state">
+    <strong>Loading resources…</strong>
+    <p>Fetching from the library.</p>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal" style="display:none" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-icon">🔗</div>
+    <h3 id="modal-title">Resource Link</h3>
+    <p>This is a placeholder link. In the live product, this would open or download the actual resource.</p>
+    <button class="btn-primary" onclick="document.getElementById('modal').style.display='none'">Got it</button>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

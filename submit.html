@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit a Resource — Fay</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="14" cy="14" r="14" fill="#6B4EFF" opacity="0.12"/>
+      <path d="M14 6a8 8 0 1 1 0 16A8 8 0 0 1 14 6zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 14 8zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" fill="#6B4EFF"/>
+    </svg>
+    Fay
+  </a>
+  <a href="index.html" class="btn-secondary">← Back to Library</a>
+</nav>
+
+<div class="form-page">
+  <h1>Submit a Resource</h1>
+  <p class="subtitle">Share a resource with the Fay dietitian community. Fields marked <span style="color:var(--purple)">*</span> are required.</p>
+
+  <div id="success-banner" class="success-banner">
+    ✅ Resource submitted successfully! Redirecting to the library…
+  </div>
+
+  <form id="submit-form" novalidate>
+
+    <!-- NPI + Name -->
+    <div class="form-row">
+      <div class="form-section">
+        <label for="npi">NPI Number <span class="req">*</span></label>
+        <input type="text" id="npi" name="npi" placeholder="1234567890" maxlength="10" inputmode="numeric" />
+        <div class="error-msg" id="npi-error"></div>
+      </div>
+      <div class="form-section">
+        <label for="rd-name">Your Name <span class="req">*</span></label>
+        <input type="text" id="rd-name" name="name" placeholder="Jane Smith, RD" />
+        <div class="error-msg" id="name-error"></div>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="form-section">
+      <label for="title">Resource Title <span class="req">*</span></label>
+      <input type="text" id="title" name="title" placeholder="e.g., IBS-Friendly 7-Day Meal Plan" />
+      <div class="error-msg" id="title-error"></div>
+    </div>
+
+    <!-- Description -->
+    <div class="form-section">
+      <label for="description">Description <span class="req">*</span></label>
+      <textarea id="description" name="description" placeholder="Briefly describe what this resource covers and who it's best for…"></textarea>
+      <div class="error-msg" id="description-error"></div>
+    </div>
+
+    <!-- File or Link -->
+    <div class="form-section">
+      <label>Resource File or Link <span class="req">*</span> <span class="hint">(provide at least one)</span></label>
+      <input type="file" id="resource-file" name="resourceFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.mp4,.mov" />
+      <div class="or-divider">or</div>
+      <input type="url" id="resource-link" name="link" placeholder="https://…" />
+      <div class="error-msg" id="link-error"></div>
+    </div>
+
+    <!-- Thumbnail -->
+    <div class="form-section">
+      <label for="thumbnail">Thumbnail Image <span class="hint">(optional — JPG, PNG)</span></label>
+      <input type="url" id="thumbnail" name="thumbnail" placeholder="Image URL (optional)" />
+    </div>
+
+    <!-- Resource Type -->
+    <div class="form-section">
+      <label>Resource Type <span class="req">*</span></label>
+      <div class="ms-wrap" id="typeWrap">
+        <button type="button" class="ms-trigger" id="typeTrigger">
+          <span class="ms-label">Select type…</span>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="ms-dropdown" id="typeDropdown">
+          <div class="ms-search"><input type="text" placeholder="Search…" id="typeSearch" /></div>
+          <div class="ms-options" id="typeOptions"></div>
+        </div>
+      </div>
+      <div class="error-msg" id="type-error"></div>
+    </div>
+
+    <!-- Condition -->
+    <div class="form-section">
+      <label>Condition / Specialty <span class="req">*</span></label>
+      <div class="ms-wrap" id="conditionWrap">
+        <button type="button" class="ms-trigger" id="conditionTrigger">
+          <span class="ms-label">Select conditions…</span>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="ms-dropdown" id="conditionDropdown">
+          <div class="ms-search"><input type="text" placeholder="Search…" id="conditionSearch" /></div>
+          <div class="ms-options" id="conditionOptions"></div>
+        </div>
+      </div>
+      <div class="error-msg" id="condition-error"></div>
+    </div>
+
+    <!-- Selected tags preview -->
+    <div class="chiclets" id="chiclets" style="padding:0; margin-bottom:24px;"></div>
+
+    <button type="submit" class="btn-primary submit-btn" id="submit-btn">
+      Submit Resource
+    </button>
+
+  </form>
+</div>
+
+<script src="submit.js"></script>
+</body>
+</html>
