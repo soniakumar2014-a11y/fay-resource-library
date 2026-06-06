@@ -4,8 +4,6 @@
    CONFIGURATION: Replace with your Apps Script Web App URL.
    ============================================================ */
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeNt8zjoEKMzk_i8TAuynDX91qWxNh4kigDrU_lIJ4xkp15_Yd3VaN74nyQpey1jks/exec';
-
 const CONDITIONS = [
   'Celiac Disease', 'Diabetes', 'Eating Disorders', 'Heart Health',
   'IBS', 'Kidney Disease', 'PCOS', 'Prenatal / Pregnancy',
@@ -163,17 +161,25 @@ function validate() {
   return valid;
 }
 
+const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/1c2GOwv3gHsAUkoGNVYN6yVpDc8Mj0xpV22w-Hs0qriE/formResponse';
+
+const FIELD_IDS = {
+  npi:         'entry.1725633455',
+  name:        'entry.668716972',
+  title:       'entry.1304838667',
+  description: 'entry.1708620029',
+  link:        'entry.220443743',
+  thumbnail:   'entry.1041535302',
+  type:        'entry.1270780311',
+  conditions:  'entry.1148700554',
+};
+
 /* ── Submit ── */
-async function handleSubmit(e) {
+function handleSubmit(e) {
   e.preventDefault();
   if (!validate()) return;
 
-  const btn = document.getElementById('submit-btn');
-  btn.disabled = true;
-  btn.textContent = 'Submitting…';
-
-  const payload = {
-    timestamp: new Date().toISOString(),
+  const values = {
     npi:         document.getElementById('npi').value.trim(),
     name:        document.getElementById('rd-name').value.trim(),
     title:       document.getElementById('title').value.trim(),
@@ -184,32 +190,21 @@ async function handleSubmit(e) {
     conditions:  [...selectedConditions].join(','),
   };
 
-  try {
-    if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
-      /* Apps Script requires text/plain with no-cors — JSON encoded as a plain string */
-      await fetch(APPS_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(payload),
-      });
-    } else {
-      /* Demo mode: store in sessionStorage so library can pick it up */
-      const existing = JSON.parse(sessionStorage.getItem('fay_resources') || '[]');
-      existing.unshift(payload);
-      sessionStorage.setItem('fay_resources', JSON.stringify(existing));
-    }
+  /* Build a hidden form and submit it to Google Forms */
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = GOOGLE_FORM_URL;
 
-    document.getElementById('success-banner').style.display = 'block';
-    btn.textContent = 'Submitted!';
-    setTimeout(() => {
-      window.location.href = 'index.html?new=1';
-    }, 1500);
-  } catch (err) {
-    btn.disabled = false;
-    btn.textContent = 'Submit Resource';
-    alert('Something went wrong. Please try again.');
-  }
+  Object.entries(FIELD_IDS).forEach(([key, entryId]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = entryId;
+    input.value = values[key] || '';
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
 }
 
 function escHtml(s) {
