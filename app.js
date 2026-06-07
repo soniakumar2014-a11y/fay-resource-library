@@ -9,11 +9,13 @@
 const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQW684lRpXI3t2guOqdSdeKjR9kpGhneKfEq324_kOyzlI8Nu991CfNiS1o41bUefXFnUoaYrC-3G_9/pub?gid=1828099228&single=true&output=tsv';
 
 const CONDITIONS = [
-  'Celiac Disease', 'Diabetes', 'Eating Disorders', 'Heart Health',
-  'IBS', 'Kidney Disease', 'PCOS', 'Prenatal / Pregnancy',
-  'Weight Management', 'Vegan / Vegetarian', 'Food Allergies',
-  'High Cholesterol', 'Hypertension', 'Gut Health', 'Cancer Support',
-  'Autoimmune', 'Sports Nutrition', 'Mental Health & Nutrition',
+  'Anorexia Nervosa', 'ARFID', 'Autoimmune', 'Bariatric',
+  'Binge Eating Disorder', 'Bulimia', 'Cancer / Oncology', 'Diabetes',
+  'Eating Disorders & Disordered Eating', 'Fertility', 'Gluten Free',
+  'Gut Health', 'IBS', 'PCOS', 'Pediatric',
+  'Perimenopause & Menopause', 'Postpartum', 'Pregnancy', 'Renal',
+  'Sports Nutrition', 'Thyroid Health', 'Transplant', 'Vegan',
+  'Vegetarian', 'Weight Loss',
 ];
 
 const RESOURCE_TYPES = [
