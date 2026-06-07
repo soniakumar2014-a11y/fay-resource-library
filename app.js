@@ -19,8 +19,8 @@ const CONDITIONS = [
 ];
 
 const RESOURCE_TYPES = [
-  'PDF Guide', 'Recipe Collection', 'Meal Plan Template',
-  'Grocery Guide', 'Video', 'Handout', 'Worksheet', 'Meal Prep Tool',
+  'Recipes', 'Patient Handout', 'Grocery Guide',
+  'Meal Prep Tool', 'Worksheet', 'Meal Plan Template',
 ];
 
 /* ── Seed data (shown when no Sheets URL is configured) ── */

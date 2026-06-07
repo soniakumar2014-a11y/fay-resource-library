@@ -15,8 +15,8 @@ const CONDITIONS = [
 ];
 
 const RESOURCE_TYPES = [
-  'PDF Guide', 'Recipe Collection', 'Meal Plan Template',
-  'Grocery Guide', 'Video', 'Handout', 'Worksheet', 'Meal Prep Tool',
+  'Recipes', 'Patient Handout', 'Grocery Guide',
+  'Meal Prep Tool', 'Worksheet', 'Meal Plan Template',
 ];
 
 let selectedConditions = new Set();
