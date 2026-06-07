@@ -6,7 +6,7 @@
    Google Apps Script Web App URL after setup.
    ============================================================ */
 
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQW684lRpXI3t2guOqdSdeKjR9kpGhneKfEq324_kOyzlI8Nu991CfNiS1o41bUefXFnUoaYrC-3G_9/pub?gid=1828099228&single=true&output=csv';
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQW684lRpXI3t2guOqdSdeKjR9kpGhneKfEq324_kOyzlI8Nu991CfNiS1o41bUefXFnUoaYrC-3G_9/pub?gid=1828099228&single=true&output=tsv';
 
 const CONDITIONS = [
   'Celiac Disease', 'Diabetes', 'Eating Disorders', 'Heart Health',
@@ -145,14 +145,11 @@ const HEADER_MAP = {
 function parseCSV(text) {
   const lines = text.trim().split('\n');
   if (lines.length < 2) return [];
-  const rawHeaders = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
-  const headers = rawHeaders.map(h => HEADER_MAP[h] || h);
+  const headers = lines[0].split('\t').map(h => HEADER_MAP[h.trim().toLowerCase()] || h.trim().toLowerCase());
   return lines.slice(1).map(line => {
-    const values = line.match(/(".*?"|[^,]+)(?=,|$)/g) || [];
+    const values = line.split('\t');
     const obj = {};
-    headers.forEach((h, i) => {
-      obj[h] = (values[i] || '').trim().replace(/^"|"$/g, '');
-    });
+    headers.forEach((h, i) => { obj[h] = (values[i] || '').trim(); });
     return obj;
   }).filter(r => r.title);
 }
@@ -205,7 +202,8 @@ function renderCards() {
 
 function cardHTML(r, i) {
   const tags = (r.conditions || '').split(',').map(c => c.trim()).filter(Boolean);
-  const imgSection = r.thumbnail
+  const hasThumb = r.thumbnail && r.thumbnail.startsWith('http');
+  const imgSection = hasThumb
     ? `<img src="${r.thumbnail}" alt="${r.title}" />`
     : `<div class="card-img-placeholder">
         ${docIcon()}
