@@ -6,7 +6,7 @@
    Google Apps Script Web App URL after setup.
    ============================================================ */
 
-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQW684lRpXI3t2guOqdSdeKjR9kpGhneKfEq324_kOyzlI8Nu991CfNiS1o41bUefXFnUoaYrC-3G_9/pub?gid=0&single=true&output=csv';
+const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQW684lRpXI3t2guOqdSdeKjR9kpGhneKfEq324_kOyzlI8Nu991CfNiS1o41bUefXFnUoaYrC-3G_9/pub?gid=1828099228&single=true&output=csv';
 
 const CONDITIONS = [
   'Celiac Disease', 'Diabetes', 'Eating Disorders', 'Heart Health',
@@ -114,7 +114,8 @@ async function loadResources() {
     const text = await res.text();
     const rows = parseCSV(text);
     console.log('Sheets CSV response:', rows);
-    allResources = rows.length ? rows : [...SEED_DATA];
+    const data = rows.length ? rows : [...SEED_DATA];
+    allResources = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
   } catch (err) {
     console.error('Failed to load CSV:', err);
     allResources = [...SEED_DATA];
@@ -124,10 +125,28 @@ async function loadResources() {
 }
 
 /* ── CSV parser ── */
+const HEADER_MAP = {
+  'timestamp':     'timestamp',
+  'npi number':    'npi',
+  'npi':           'npi',
+  'name':          'name',
+  'resource title':'title',
+  'title':         'title',
+  'description':   'description',
+  'resource link': 'link',
+  'link':          'link',
+  'thumbnail url': 'thumbnail',
+  'thumbnail':     'thumbnail',
+  'resource type': 'type',
+  'type':          'type',
+  'conditions':    'conditions',
+};
+
 function parseCSV(text) {
   const lines = text.trim().split('\n');
   if (lines.length < 2) return [];
-  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+  const rawHeaders = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+  const headers = rawHeaders.map(h => HEADER_MAP[h] || h);
   return lines.slice(1).map(line => {
     const values = line.match(/(".*?"|[^,]+)(?=,|$)/g) || [];
     const obj = {};
