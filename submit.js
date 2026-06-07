@@ -37,12 +37,15 @@ function buildDropdown(key, options, selectedSet) {
   const optsList = document.getElementById(`${key}Options`);
   const label    = trigger.querySelector('.ms-label');
 
+  const isSingle = key === 'type';
+
   function renderOptions(filter = '') {
     const q = filter.toLowerCase();
     const visible = options.filter(o => o.toLowerCase().includes(q));
+    const inputType = isSingle ? 'radio' : 'checkbox';
     optsList.innerHTML = visible.map(o => `
       <label class="ms-option">
-        <input type="checkbox" value="${escAttr(o)}" ${selectedSet.has(o) ? 'checked' : ''}
+        <input type="${inputType}" value="${escAttr(o)}" ${selectedSet.has(o) ? 'checked' : ''}
           onchange="toggleOption('${key}', '${escAttr(o)}', this.checked)" />
         ${escHtml(o)}
       </label>`).join('');
@@ -68,7 +71,7 @@ function buildDropdown(key, options, selectedSet) {
     renderOptions(search.value);
     const count = selectedSet.size;
     label.textContent = count
-      ? `${count} selected`
+      ? (key === 'type' ? [...selectedSet][0] : `${count} selected`)
       : (key === 'type' ? 'Select type…' : 'Select conditions…');
     updateChiclets();
   };
@@ -76,8 +79,10 @@ function buildDropdown(key, options, selectedSet) {
 
 function toggleOption(key, value, checked) {
   const map = { condition: selectedConditions, type: selectedTypes };
+  if (key === 'type' && checked) map[key].clear();
   if (checked) map[key].add(value);
   else map[key].delete(value);
+  if (key === 'type') closeAllDropdowns();
   window[`refreshDropdown_${key}`]();
 }
 
